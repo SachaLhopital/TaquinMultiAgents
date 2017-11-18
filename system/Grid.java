@@ -1,8 +1,10 @@
 package system;
 
+import system.Agents.Agent;
+import system.Agents.AgentCognitif;
+
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 /**
  * Created by Sachouw on 09/10/2017.
@@ -14,9 +16,11 @@ public class Grid {
 
     private char[][] grid;
     private List<Agent> agents;
+    private int nbMovement;
 
     public Grid(Agent... a) {
 
+        nbMovement = 0;
         grid = new char[SIZE][SIZE];
 
         for(int i = 0; i < SIZE; i++) {
@@ -31,6 +35,28 @@ public class Grid {
 
         for(int k = 0; k < a.length; k++) {
             temp = a[k];
+            agents.add(temp);
+            grid[temp.getActualPositionX()][temp.getActualPositionY()] = temp.getImage();
+        }
+
+        System.out.println("Puzzle Initial : \n");
+        printPuzzle();
+    }
+
+    public Grid(List<Agent> a) {
+
+        nbMovement = 0;
+        grid = new char[SIZE][SIZE];
+
+        for(int i = 0; i < SIZE; i++) {
+            for(int j = 0; j < SIZE; j++) {
+                grid[i][j] = CASE_VIDE;
+            }
+        }
+
+        agents = new ArrayList<>();
+
+        for(Agent temp : a) {
             agents.add(temp);
             grid[temp.getActualPositionX()][temp.getActualPositionY()] = temp.getImage();
         }
@@ -56,7 +82,7 @@ public class Grid {
 
     /***
      * check if the puzzle is complete
-     * (check if all agents are in there target position)
+     * (check if all agentsCognitifs are in there target position)
      * @return
      */
     public boolean isNotComplete() {
@@ -72,7 +98,7 @@ public class Grid {
      * Display the puzzle on the console
      */
     public synchronized void printPuzzle() {
-        System.out.println("\n");
+        System.out.println("\n Mouvement n° " + nbMovement++ + "\n");
         for (int i = 0; i < SIZE; i++) {
             for (int j = 0; j < SIZE; j++) {
                 System.out.print(grid[i][j] + " ");
@@ -121,7 +147,7 @@ public class Grid {
 
     /***
      * Retourne la liste du chemin à emprunter pour aller d'un point "from" à un point "to" sans
-     * entrer en collision avec d'autres agents
+     * entrer en collision avec d'autres agentsCognitifs
      * Algorithme de Dijkstra
      * @param from
      * @param to
@@ -148,7 +174,7 @@ public class Grid {
 
         dist[from.getX()][from.getY()] = 0;
 
-        //hack : agents.size() - 1 car on ne parcours pas les cases occupées par d'autres agents que l'agent qui effectue dijkstra
+        //hack : agentsCognitifs.size() - 1 car on ne parcours pas les cases occupées par d'autres agentsCognitifs que l'agent qui effectue dijkstra
         while(pointsDeLaGrille.size() > agents.size() - 1) {
 
             currentPoint = getMinFromTab(pointsDeLaGrille, dist);
