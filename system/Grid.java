@@ -116,21 +116,36 @@ public class Grid {
 
         int x = agent.getActualPositionX();
         int y = agent.getActualPositionY();
-        List<Position> holes = new ArrayList<>();
+        double random = Math.random();
+        Position position;
 
-        if((x + 1) < SIZE && (grid[x + 1][y] == CASE_VIDE)) {
-            return new Position(x + 1, y);
+        if(random < 0.25) {
+            position = getIfEmptyXPlusOne(x, y);
+            position = position == null ? getIfEmptyYPlusOne(x, y) : position;
+            position = position == null ? getIfEmptyYMinusOne(x, y) : position;
+            position = position == null ? getIfEmptyXMinusOne(x, y) : position;
+
+        } else if(random < 0.5){
+            position = getIfEmptyXMinusOne(x, y);
+            position = position == null ? getIfEmptyYMinusOne(x, y) : position;
+            position = position == null ? getIfEmptyYPlusOne(x, y) : position;
+            position = position == null ? getIfEmptyXPlusOne(x, y) : position;
+
+        } else if(random < 0.75) {
+            position = getIfEmptyYPlusOne(x, y);
+            position = position == null ? getIfEmptyXPlusOne(x, y) : position;
+            position = position == null ? getIfEmptyXMinusOne(x, y) : position;
+            position = position == null ? getIfEmptyYMinusOne(x, y) : position;
+
+        } else {
+            position = getIfEmptyYMinusOne(x, y);
+            position = position == null ? getIfEmptyXPlusOne(x, y) : position;
+            position = position == null ? getIfEmptyYPlusOne(x, y) : position;
+            position = position == null ? getIfEmptyXMinusOne(x, y) : position;
+
         }
-        if((x - 1) >= 0 && (grid[x - 1][y] == CASE_VIDE)) {
-            return new Position(x - 1, y);
-        }
-        if((y - 1) >= 0 && (grid[x][y - 1] == CASE_VIDE)) {
-            return new Position(x, y - 1);
-        }
-        if((y + 1) < SIZE && (grid[x][y + 1] == CASE_VIDE)) {
-            return new Position(x, y + 1);
-        }
-        return agent.getCurrentPosition();
+
+        return position == null ? agent.getCurrentPosition() : position;
     }
 
     /***
@@ -138,7 +153,7 @@ public class Grid {
      * @param targetPosition
      * @param agent
      */
-    public synchronized void moveAgentFromTo(Position targetPosition, Agent agent) {
+    public void moveAgentFromTo(Position targetPosition, Agent agent) {
         Position agentCurrentPosition = agent.getCurrentPosition();
         grid[agentCurrentPosition.getX()][agentCurrentPosition.getY()] = CASE_VIDE;
         grid[targetPosition.getX()][targetPosition.getY()] = agent.getImage();
@@ -249,27 +264,27 @@ public class Grid {
 
         int x = agent.getActualPositionX();
         int y = agent.getActualPositionY();
-        List<Agent> neighbours = new ArrayList<>();
+        Agent neighbour = null;
 
         if((x + 1) < SIZE) {
-            return getAgentAtPositionIfExist(new Position(x + 1, y));
+            neighbour = getAgentAtPositionIfExist(new Position(x + 1, y));
         }
-        if((x - 1) >= 0) {
-            return getAgentAtPositionIfExist(new Position(x - 1, y));
+        if(neighbour == null && (x - 1) >= 0) {
+            neighbour = getAgentAtPositionIfExist(new Position(x - 1, y));
         }
-        if((y - 1) >= 0) {
-            return getAgentAtPositionIfExist(new Position(x, y - 1));
+        if(neighbour == null && (y - 1) >= 0) {
+            neighbour = getAgentAtPositionIfExist(new Position(x, y - 1));
         }
-        if((y + 1) < SIZE) {
-            return getAgentAtPositionIfExist(new Position(x, y + 1));
+        if(neighbour == null && (y + 1) < SIZE) {
+            neighbour = getAgentAtPositionIfExist(new Position(x, y + 1));
         }
-        return agent;
+        return neighbour == null ? agent : neighbour;
     }
 
 
 
     /*************************************************
-     * PRIVATES METHODS : DIJSKTRA UTILITIES
+     * PRIVATES METHODS : UTILITIES
      */
 
     private Position getMinFromTab(List<Position> pointsDeLaGrille, int[][] dist) {
@@ -301,5 +316,21 @@ public class Grid {
             }
         }
         return pointsDeLaGrille;
+    }
+    
+    private Position getIfEmptyXPlusOne(int x, int y) {
+        return ((x + 1) < SIZE && (grid[x + 1][y] == CASE_VIDE)) ? new Position(x + 1, y) : null;
+    }
+
+    private Position getIfEmptyXMinusOne(int x, int y) {
+        return ((x - 1) >= 0 && (grid[x - 1][y] == CASE_VIDE)) ? new Position(x - 1, y) : null;
+    }
+
+    private Position getIfEmptyYMinusOne(int x, int y) {
+        return ((y - 1) >= 0 && (grid[x][y - 1] == CASE_VIDE)) ? new Position(x, y - 1) : null;
+    }
+
+    private Position getIfEmptyYPlusOne(int x, int y) {
+        return ((y + 1) < SIZE && (grid[x][y + 1] == CASE_VIDE)) ? new Position(x, y + 1) : null;
     }
 }

@@ -33,7 +33,7 @@ public class AgentCognitif extends Agent {
                     //il n'y a pas de trou autour de nous : sendMessageToNeighbour
                     sendMessageToNeighbour();
                 } else {
-                    System.out.println(getImage() + " moves for " + message.getSender().getImage());
+                    System.out.println(getImage() + " try to moves for " + message.getSender().getImage());
                     setCurrentPosition(hole);
                     waitUntilAgentMoves(message);
                 }
@@ -41,6 +41,7 @@ public class AgentCognitif extends Agent {
 
                 if(isAtTargetPosition()) {
                     //on ne fait rien
+                    Thread.currentThread().setPriority(Thread.MIN_PRIORITY);
                 } else {
                     //On essaye d'atteindre notre position cible.
                     if(getActualPositionY() != getTargetPositionY()) {
@@ -69,11 +70,6 @@ public class AgentCognitif extends Agent {
      */
     private void sendMessageToNeighbour() {
         Agent neighbour = Main.grid.getNeighbour(this);
-
-        /*if(neighbour == null) {
-            System.out.println("NULLLL");
-        }*/
-
         Message message = new Message(this, neighbour, neighbour.getCurrentPosition());
         Main.sendMessage(message);
     }
@@ -87,7 +83,19 @@ public class AgentCognitif extends Agent {
         Agent agentWaitingFor = m.getSender();
         Position p = m.getSenderPosition();
 
-        System.out.println(getImage() + " waiting for " + agentWaitingFor.getImage());
+        //todo remove
+        /*if(agentWaitingFor.getImage() == getImage()) {
+            System.out.println("ERREUR : ");
+            for(Message temp : Main.communications.get(this)) {
+                System.out.println(temp.getSender().getImage()
+                        + " send " + temp.getPositionToFree().getX() + " | " + temp.getPositionToFree().getY()
+                        + " from " + temp.getSenderPosition().getX() + " | " + temp.getSenderPosition().getY());
+            }
+        }*/
+
+        int priority = getPriority() == MIN_PRIORITY ? getPriority() : getPriority() - 1;
+        setPriority(priority);
+        System.out.println(getImage() + " waiting for " + agentWaitingFor.getImage() + " (set prio : " + getPriority() + ")");
 
         //Tant que l'agent qui nous a demandé de bouger est à la position qui lui a fait envoyer le message
         //et qu'il ne s'est pas passé 1s

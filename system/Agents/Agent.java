@@ -41,27 +41,34 @@ public abstract class Agent extends Thread {
         return targetPosition;
     }
 
-    public synchronized void setCurrentPosition(Position position) {
+    public void setCurrentPosition(Position position) {
 
-        if(previousPosition.equals(position)) {
-            //Si la position où on était précédement est la même que celle que l'on essaye d'atteindre
-            //on tourne en rond, donc on se déplace aléatoirement ailleurs
-            position = Main.grid.getRandomHoleAroundMe(this);
-            System.out.println(getImage() + " moves randomly");
-        }
+        synchronized (Main.grid) {
 
-        previousPosition = currentPosition;
-        Agent neighbour = Main.grid.getAgentAtPositionIfExist(position);
+            if (previousPosition.equals(position)) {
+                //Si la position où on était précédement est la même que celle que l'on essaye d'atteindre
+                //on tourne en rond, donc on se déplace aléatoirement ailleurs (en changeant de x ou y)
+                position = Main.grid.getRandomHoleAroundMe(this);
+                System.out.println(getImage() + " moves randomly");
 
-        if (neighbour == null) {
-            //on se déplace
-            Main.grid.moveAgentFromTo(position, this);
-            currentPosition = position;
-            Main.iMoved();
-        } else {
-            //on envoi un message
-            Message message = new Message(this, neighbour, position);
-            Main.sendMessage(message);
+                System.out.println(getImage() + " give minority from " + getPriority() + " to + 1");
+                int priority = getPriority() == MAX_PRIORITY ? getPriority() : getPriority() + 1;
+                Thread.currentThread().setPriority(priority);
+            }
+
+            previousPosition = currentPosition;
+            Agent neighbour = Main.grid.getAgentAtPositionIfExist(position);
+
+            if (neighbour == null) {
+                //on se déplace
+                Main.grid.moveAgentFromTo(position, this);
+                currentPosition = position;
+                Main.iMoved();
+            } else {
+                //on envoi un message
+                Message message = new Message(this, neighbour, position);
+                Main.sendMessage(message);
+            }
         }
     }
 
