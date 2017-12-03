@@ -51,7 +51,7 @@ public abstract class Agent extends Thread {
                 position = Main.grid.getRandomHoleAroundMe(this);
                 System.out.println(getImage() + " moves randomly");
 
-                System.out.println(getImage() + " give minority from " + getPriority() + " to + 1");
+                System.out.println(getImage() + " give priority " + getPriority() + " + 1");
                 int priority = getPriority() == MAX_PRIORITY ? getPriority() : getPriority() + 1;
                 Thread.currentThread().setPriority(priority);
             }

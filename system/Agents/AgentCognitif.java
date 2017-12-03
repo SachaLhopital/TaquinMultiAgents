@@ -83,16 +83,6 @@ public class AgentCognitif extends Agent {
         Agent agentWaitingFor = m.getSender();
         Position p = m.getSenderPosition();
 
-        //todo remove
-        /*if(agentWaitingFor.getImage() == getImage()) {
-            System.out.println("ERREUR : ");
-            for(Message temp : Main.communications.get(this)) {
-                System.out.println(temp.getSender().getImage()
-                        + " send " + temp.getPositionToFree().getX() + " | " + temp.getPositionToFree().getY()
-                        + " from " + temp.getSenderPosition().getX() + " | " + temp.getSenderPosition().getY());
-            }
-        }*/
-
         int priority = getPriority() == MIN_PRIORITY ? getPriority() : getPriority() - 1;
         setPriority(priority);
         System.out.println(getImage() + " waiting for " + agentWaitingFor.getImage() + " (set prio : " + getPriority() + ")");

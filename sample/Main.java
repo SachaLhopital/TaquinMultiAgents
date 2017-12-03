@@ -32,14 +32,14 @@ public class Main {
         new AgentCognitif(new Position(4, 4), new Position(0,3), '%'),
         new AgentCognitif(new Position(1, 1), new Position(1,4), 'µ'),
         new AgentCognitif(new Position(2, 1), new Position(3,0), '?'),
-        new AgentCognitif(new Position(2, 3), new Position(3,4), '!'),
-        new AgentCognitif(new Position(4, 1), new Position(1,0), 'Z')
-        /*AgentCognitif ac15 = new AgentCognitif(new Position(, ), new Position(,), 'R'),
-        AgentCognitif ac16 = new AgentCognitif(new Position(, ), new Position(,), 'M'),
-        AgentCognitif ac17 = new AgentCognitif(new Position(,), new Position(,), 'P'),
-        AgentCognitif ac18 = new AgentCognitif(new Position(,), new Position(,), 'F'),
-        AgentCognitif ac19 = new AgentCognitif(new Position(,), new Position(,), 'H'),
-        AgentCognitif ac20 = new AgentCognitif(new Position(,), new Position(,), 'K'),*/
+        new AgentCognitif(new Position(3, 2), new Position(3,4), '!'),
+        new AgentCognitif(new Position(4, 1), new Position(1,0), 'Z'),
+        new AgentCognitif(new Position(1, 4), new Position(2,1), 'R'),
+        new AgentCognitif(new Position(3, 3), new Position(4,4), 'M'),
+        new AgentCognitif(new Position(1,3), new Position(3,1), 'P'),
+        new AgentCognitif(new Position(4,2), new Position(1,1), 'F'),
+        new AgentCognitif(new Position(2,2), new Position(4,0), 'H'),
+        new AgentCognitif(new Position(0,4), new Position(0,4), 'K'),
     };
 
 
@@ -101,16 +101,6 @@ public class Main {
      * @param message
      */
     public static void sendMessage(Message message) {
-
-        /*List<Message> listMessages = communications.get(message.getSender());
-        if ((listMessages.size() > 0)) {
-            for (int i = 0; i < listMessages.size(); i++) {
-                if (listMessages.get(i).getPositionToFree().equals(message.getPositionToFree())) {
-                    System.out.println("cant add !");
-                    return;
-                }
-            }
-        }*/
 
         communications.get(message.getReceiver()).add(message);
 

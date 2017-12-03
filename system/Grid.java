@@ -108,7 +108,7 @@ public class Grid {
     }
 
     /***
-     * Get a hole next to an agent (randomly between all holes around him)
+     * Get a hole next to an agent (with kind of randomly choice)
      * @param agent
      * @return
      */
@@ -256,7 +256,7 @@ public class Grid {
     }
 
     /***
-     * Get a neighbour of an agent (randomly choose between all it's neighbours)
+     * Get a neighbour of an agent
      * @param agent
      * @return
      */
@@ -317,7 +317,7 @@ public class Grid {
         }
         return pointsDeLaGrille;
     }
-    
+
     private Position getIfEmptyXPlusOne(int x, int y) {
         return ((x + 1) < SIZE && (grid[x + 1][y] == CASE_VIDE)) ? new Position(x + 1, y) : null;
     }
